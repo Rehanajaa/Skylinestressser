@@ -1,0 +1,221 @@
+<?php
+$page = 'Addons';
+define('allow', TRUE);
+include_once 'main/public/header.php';
+?>
+
+<script>
+    let requestBlock = false;
+
+    function addonBuy(addon) {
+        if(requestBlock) return;
+        if(addon < 1 || addon > 4) return;
+        requestBlock = true;
+        
+        $.post("/process?buyAddon", {addon: addon - 1}, (response) => {
+            requestBlock = false;
+            response = JSON.parse(response)
+
+            if(response.error) {
+                toastr.error(response.error)
+            } else {
+                toastr.success(response.message)
+                setTimeout(() => {
+                    window.location = '/balance'
+                }, 1000);
+            }
+        })
+    }
+</script>
+
+<style>
+    .b-price-plan__cost {
+        border-radius: 16px;
+    }
+
+    .btn2:not(.btn-outline):not(.btn2-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
+        border: 0;
+        padding: calc(.75rem + 1px) calc(1.5rem + 1px);
+    }
+
+    .btn-check:active+.btn.btn-light-primary, .btn-check:checked+.btn.btn-light-primary, .btn2.btn-light-primary.active, .btn2.btn-light-primary.show, .btn2.btn-light-primary:active:not(.btn-active), .btn2.btn-light-primary:focus:not(.btn2-active), .btn2.btn-light-primary:hover:not(.btn-active), .show>.btn2.btn-light-primary {
+        color: #fff;
+        border-color: #526477;
+        background-color: #526477!important;
+    }
+
+    .btn2:not(.btn2-shadow):not(.shadow):not(.shadow-sm):not(.shadow-lg) {
+        box-shadow: none!important;
+    }
+
+    .btn2 {
+        display: inline-block;
+        font-weight: 500;
+        line-height: 1.5;
+        color: #fff;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: .75rem 1.5rem;
+        font-size: 0.8rem;
+        border-radius: .95rem;
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    .btn2.btn-light-primary {
+        color: rgba(125, 138, 164, 1);
+        border-color: #2d2e32;
+        background-color: #2d2e32;
+    }
+
+    .cst-wdth {
+        max-width: 450px;
+    }
+
+    .cst-grid {
+        display: grid;
+        grid-template-columns: 25% 25%;
+    }
+</style>
+
+<div id="content-page" class="content-page">
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb iq-bg-primary d-flex justify-content-between">
+                <li class="btn btn-sm btn-primary dark-icon" aria-current="page"><?php echo "$page" ?></li>
+            </ol>
+        </nav>
+        <div class="b_plan_body iq-card-block iq-card-stretch iq-card-height" id="refresh">
+            <div class="alert alert-danger" role="alert">
+                You need to have active plan in order to use addons!
+            </div>
+            <div class="alert alert-primary" role="alert">
+                If you want to purchase using PayPal message on Telegram - <a href="https://t.me/gnacioor" style="margin-left: 5px;">@gnacioor</a>
+            </div>
+            <div class="cst-grid justify-content-center">
+                <div class="col-4 cst-wdth justify-content-center">
+                    <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                        <div class="card-header">
+                        +200s
+                        </div>
+                        <div class="iq-card-body">
+                            <div class="b-price-plan__item b-price-plan__cost">
+                                <div class="cost-title" id="customPrice">10</div>
+                                <div class="cost-time">Monthly</div>
+                            </div>
+                            <ul class="iq-list">
+                                <div style="margin-top: 20px; padding-bottom: 30px;">
+                                    <center>
+                                        <span>Description:</span><br>
+                                        <span style="font-weight: 500;">
+                                            Additional 200s attack time
+                                        </span>
+                                    </center>
+                                </div>
+                            </ul>
+                            <div class="card-footer text-center">
+                                <button type="button" class="btn2 btn-light-primary" onclick="addonBuy(1)">
+                                    Purchase
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-4 cst-wdth justify-content-center">
+                    <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                        <div class="card-header">
+                            +1 conc
+                        </div>
+                        <div class="iq-card-body">
+                            <div class="b-price-plan__item b-price-plan__cost">
+                                <div class="cost-title" id="customPrice">10</div>
+                                <div class="cost-time">Monthly</div>
+                            </div>
+                            <ul class="iq-list">
+                                <div style="margin-top: 20px; padding-bottom: 30px;">
+                                    <center>
+                                        <span>Description:</span><br>
+                                        <span style="font-weight: 500;">
+                                        Additional concurrent
+                                        </span>
+                                    </center>
+                                </div>
+                            </ul>
+                            <div class="card-footer text-center">
+                                <button type="button" class="btn2 btn-light-primary" onclick="addonBuy(2)">
+                                    Purchase
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-4 cst-wdth justify-content-center">
+                    <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                        <div class="card-header">
+                        Premium
+                        </div>
+                        <div class="iq-card-body">
+                            <div class="b-price-plan__item b-price-plan__cost">
+                                <div class="cost-title" id="customPrice">15</div>
+                                <div class="cost-time">Monthly</div>
+                            </div>
+                            <ul class="iq-list">
+                                <div style="margin-top: 20px; padding-bottom: 30px;">
+                                    <center>
+                                        <span>Description:</span><br>
+                                        <span style="font-weight: 500;">
+                                        Access to premium methods
+                                        </span>
+                                    </center>
+                                </div>
+                            </ul>
+                            <div class="card-footer text-center">
+                                <button type="button" class="btn2 btn-light-primary" onclick="addonBuy(3)">
+                                    Purchase
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4 cst-wdth justify-content-center">
+                    <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                        <div class="card-header">
+                        API
+                        </div>
+                        <div class="iq-card-body">
+                            <div class="b-price-plan__item b-price-plan__cost">
+                                <div class="cost-title" id="customPrice">15</div>
+                                <div class="cost-time">Monthly</div>
+                            </div>
+                            <ul class="iq-list">
+                                <div style="margin-top: 20px; padding-bottom: 30px;">
+                                    <center>
+                                        <span>Description:</span><br>
+                                        <span style="font-weight: 500;">
+                                        Access to API
+                                        </span>
+                                    </center>
+                                </div>
+                            </ul>
+                            <div class="card-footer text-center">
+                                <button type="button" class="btn2 btn-light-primary" onclick="addonBuy(4)">
+                                    Purchase
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+include_once('main/public/footer.php');
+?>
