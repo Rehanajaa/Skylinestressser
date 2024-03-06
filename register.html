@@ -1,0 +1,173 @@
+<?php
+$page = 'Register';
+define('allow', TRUE);
+include_once('inc.php'); 
+
+if ($User->IsLoged() == true) {
+	$Alert->SaveAlert('Welcome back!', 'success');
+	header('Location: home');
+	die();
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>neostresser.ws - register</title>
+	<link rel="shortcut icon" href="assets/images/favicon.ico" />
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<!-- Typography CSS -->
+	<link rel="stylesheet" href="assets/css/typography.css">
+	<!-- Style CSS -->
+	<link rel="stylesheet" href="assets/css/style.css">
+	<!-- Responsive CSS -->
+	<link rel="stylesheet" href="assets/css/responsive.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+	<style>
+		input[type="checkbox"] {
+			border: 0!important;
+    		background-color: #2b2b40!important;
+		}
+
+		.flex-center {
+			justify-content: center;
+			align-items: center;
+		}
+
+		.flex-column-auto {
+			flex: none;
+		}
+
+		.p-10 {
+			padding: 2.5rem!important;
+		}
+
+		.flex-column-fluid {
+			flex: 1 0 auto;
+		}
+
+
+		@media (min-width: 992px) {
+			.pb-lg-20 {
+				padding-bottom: 5rem!important;
+			}
+		}
+
+		.flex-column {
+			flex-direction: column!important;
+		}
+	</style>
+</head>
+<body>
+	<?php if(!empty($Alert->PrintAlert())) { echo $Alert->PrintAlert(); $Alert->RemoveAlert(); } ?>
+	<!-- loader Start -->
+	<div id="loading">
+		<div id="loading-center">
+		</div>
+	</div>
+	<!-- loader END -->
+	<!-- Sign in Start -->
+	<section class="auth-wrapper auth-v1">
+		<div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20 auth-inner">
+			<div class="sign-in-from auth-inner">
+				<div style="display: flex; justify-content: center;">
+					<a href="#" style="margin-bottom: 35px;">
+						<img alt="Logo" src="/assets/images/dark.png" style="height: 80px;">
+					</a>
+				</div>
+				<div class="iq-card">
+					<div class="iq-card-body">
+						<h4 class="mb-0 brand-logo">Create an Account</h4>
+						<div class="text-center">
+							<span class="dark-color d-inline-block line-height-2" style="color: rgba(128,128,128,1);">
+								Already have an account?
+								<a href="login" style="text-decoration: underline;">Login</a>
+							</span>
+						</div>
+						<form  method="POST" id="Register">
+							<div class="form-group">
+								<input type="hidden" id="_csrf" name="_csrf" value="<?php echo $csrftoken; ?>">
+							</div>
+							<label for="Username">Username</label>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1">
+										<i class="ri-user-fill"></i>
+									</span>
+								</div>
+								<input type="text" class="form-control mb-0" name="Username" id="Username"  placeholder="" >
+							</div>
+							<label for="Password1">Password</label>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1">
+										<i class="ri-lock-fill"></i>
+									</span>
+								</div>
+								<input id="password1" type="password" class="form-control mb-0" name="Password1" id="Password1"  placeholder="" >
+							</div>
+							<label for="Password2">Repeat password</label>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1">
+										<i class="ri-lock-fill"></i>
+									</span>
+								</div>
+								<input id="password2" type="password" class="form-control mb-0" name="Password2" id="Password2"  placeholder="" >
+							</div>
+							<div class="form-group text-center">
+								<img  id="CaptchaImg" width="140" height="35" src="captcha?<?php echo time(); ?>" alt="Captcha Code">
+							</div>
+							<label for="Password2">Captcha</label>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1">
+										<i class="ri-robot-fill"></i>
+									</span>
+								</div>
+								<input type="text" class="form-control mb-0" name="CaptchaCode" id="CaptchaCode"  placeholder="" >
+							</div>
+							<div class="d-flex justify-content-center">
+								<button type="button" class="btn btn-primary btn-sm col-4">Create Account</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="d-flex flex-center flex-column-auto p-10">
+			<div class="d-flex align-items-center fw-bold fs-6">
+				<a href="https://t.me/neostresser" class="text-muted text-hover-primary px-2">Telegram</a>
+				<a href="https://t.me/neooproofs" class="text-muted text-hover-primary px-2">Power proof</a>
+			</div>
+		</div>
+	</section>
+	<!-- Sign in END -->
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+	<script src="assets/js/jquery.min.js"></script>
+	<!-- Rtl and Darkmode -->
+	<script src="assets/js/customizer.js"></script>
+	<script src="assets/js/popper.min.js"></script>      
+	<script src="assets/js/bootstrap.min.js"></script>
+	<!-- Countdown JavaScript -->
+	<script src="assets/js/countdown.min.js"></script>
+	<!-- Counterup JavaScript -->
+	<script src="assets/js/waypoints.min.js"></script>
+	<script src="assets/js/jquery.counterup.min.js"></script>
+	<!-- Wow JavaScript -->
+	<script src="assets/js/wow.min.js"></script>
+	<!-- Select2 JavaScript -->
+	<script src="assets/js/select2.min.js"></script>
+	<!-- Smooth Scrollbar JavaScript -->
+	<script src="assets/js/smooth-scrollbar.js"></script>
+	<!-- Custom JavaScript -->
+	<script src="assets/js/custom.js"></script>
+	<script src="assets/config/userconfig.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+</body>
+</html>
