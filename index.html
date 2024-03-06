@@ -1,0 +1,292 @@
+<?php
+    define('allow', TRUE);
+    include_once 'inc.php';
+
+    global $DataBase;
+
+    $DataBase->Query("SELECT * FROM `plans` WHERE `private` = 0 ORDER BY `price` ASC");
+    $DataBase->Execute();
+
+    $Result = $DataBase->ResultSet();
+
+    $basicPlans = [];
+    $premiumPlans = [];
+
+    foreach($Result as $row) {
+        if($row['premium'] == 0) {
+            array_push($basicPlans, $row);
+        } else {
+            array_push($premiumPlans, $row);
+        }
+    }
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="neostresser.ws" name="author">
+    <meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name="viewport">
+    <meta content="NeoStresser - is a utility that allows you to test the protection of your site, server or network from real DDoS attacks for free" name="description">
+    <meta content="free stresser, top stresser, stressthem, stress them, stress denial of service, dos, stresser app, booter,ip stresser, stresser, booter, ddos tool, ddos attack, ddos attack online, layer7 ddos, layer4 ddos, api, api access, network stresser, network booter, best Booter, best stresser, strongest stresser, powerful booter, ddoser, ddos, gbooter, top booter, ipstress, booter, stresser, network stresser, network booter, #Booter, BROWSER, captcha bypass, drdos,ssyn, dns amplification" name="keywords">
+    <meta content="https://neostresser.ws" name="application-url">
+    <meta content="NeoStresser" name="application-name">
+    <meta content="index, follow" name="robots">
+    <meta property="og:title" content="The most advanced DDoS tools on the DDoS market." />
+    <meta property="og:description" content="NeoStresser is a premium IP Stresser/Booter that has browser emulation technology with CAPTCHA bypass for Layer 7 and unique Layer 4 DDoS methods." />
+    <meta property="og:image" content="/assets/images/favicon-32x32.png"/>
+    <meta property="og:url" content="https://neostresser.ws" />
+    <meta property="og:type" content="website" />
+    <link href="/assets/images/favicon.ico" rel="shortcut icon">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/typography.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="preconnect" href="https://ajax.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>NeoStresser</title>
+</head>
+<body class="iq-page-menu-horizontal">
+    <!-- loader Start -->
+    <div id="loading">
+        <div id="loading-center">
+        </div>
+    </div>
+    <!-- loader END -->
+    <!-- Wrapper Start -->
+    <div class="wrapper">
+        <div class="right-bar right-buttons">
+            <div class="iq-right-wrapper">
+                <a class="btn btn-primary btn-sm right-icon dark-icon toggle mr-1" href="#"><i class="ri-terminal-window-fill"></i></a>
+            </div>
+        </div>
+        <div id="content-page" class="content-page">
+            <div class="container-lg">
+                <section class="row h-auto">
+                    <div class="col-xl-6 align-self-center">
+                        <div class="text-center">
+                            <h1 class="display-2 s">
+                                neostresser.ws
+                            </h1>
+                            <h5 class="font-weight-bold mb-3">
+                                Use neostresser.ws to test the protection of your website, server or network against real DDoS attacks
+                            </h5>
+                            <div class="d-flex justify-content-center">
+                                <a href="/panel" class="btn btn-sm btn-primary dark-icon m-2" style="padding: 8px 30px;">Dashboard</a>
+                                <a href="#basic" class="btn btn-sm btn-primary dark-icon m-2" style="padding: 8px 30px;">Pricing</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 align-self-center">
+                        <img src="assets/images/error/02.png" class="img-fluid w-85" alt="">
+                    </div>
+                </section>
+                <section class="section" id="features" style="padding-top: 150px;">
+                    <div class="col-xl-12 mb-5">
+                        <div class="d-flex justify-content-center">
+                            <h2 class="font-weight-bold">
+                                Features
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <div class="row">
+                            <div class="col-lg-4 containervs mb-3">
+                                <div class="card-vstress">
+                                    <div class="d-flex justify-content-center">
+                                        <i class="ri-open-arm-line ri-6x line-height text-primary image"></i>
+                                    </div>
+                                    <div class="d-flex justify-content-center mt-3">
+                                        <h5 style="border-bottom: 3px solid var(--iq-dark-icon-color); width: 100px; text-align: center;">Free</h5>
+                                    </div>
+                                    <div class="content">
+                                        <p class="mb-0">Our service also provides free access for all users without any commission.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 containervs mb-3">
+                                <div class="card-vstress">
+                                    <div class="d-flex justify-content-center">
+                                        <i class="ri-sound-module-fill ri-6x line-height text-primary image"></i>
+                                    </div>
+                                    <div class="d-flex justify-content-center mt-3">
+                                        <h5 style="border-bottom: 3px solid var(--iq-dark-icon-color); width: 100px; text-align: center;">Advanced</h5>
+                                    </div>
+                                    <div class="content">
+                                        <p class="mb-0">Our service has a simple interface with advanced features to provide both ease of use and the best stress test capability..</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 containervs mb-3">
+                                <div class="card-vstress">
+                                    <div class="d-flex justify-content-center">
+                                        <i class="ri-file-shield-2-line ri-6x line-height text-primary image"></i>
+                                    </div>
+                                    <div class="d-flex justify-content-center mt-3">
+                                        <h5 style="border-bottom: 3px solid var(--iq-dark-icon-color); width: 100px; text-align: center;">Secure</h5>
+                                    </div>
+                                    <div class="content">
+                                        <p class="mb-0">We do not require email or other personal information.<br> We delete logs every day.<br> All data is encrypted.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-12" style="padding-top: 30px;">
+                        <div class="row">
+                            <div class="col-lg-4 mb-3">
+                                <div class="iq-card text-center mb-3">
+                                    <div class="iq-card-body">
+                                        <i class="ri-award-line ri-4x line-height text-primary"></i>
+                                        <h5 class="card-title mt-1">Basic Power</h5>
+                                        <p class="mb-0">
+                                            <a href="#basic" class="btn btn-sm btn-primary dark-icon">Open</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 containervs mb-3">
+                                <div class="card-vstress">
+                                    <div class="d-flex justify-content-center">
+                                        <i class="ri-flashlight-line ri-6x line-height text-primary image"></i>
+                                    </div>
+                                    <div class="d-flex justify-content-center mt-3">
+                                        <h5 style="border-bottom: 3px solid var(--iq-dark-icon-color); width: 100px; text-align: center;">Power</h5>
+                                    </div>
+                                    <div class="content">
+                                        <p class="mb-0">Our service provides the best opportunity for both simple protections and highly protected purposes.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 mb-3">
+                                <div class="iq-card text-center mb-3">
+                                    <div class="iq-card-body">
+                                        <i class="ri-star-line ri-4x line-height text-primary"></i>
+                                        <h5 class="card-title mt-1">Premium Power</h5>
+                                        <p class="mb-0"><a href="#premium" class="btn btn-sm btn-primary dark-icon">Open</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="section" id="basic" style="padding-top: 100px;">
+                    <div class="col-xl-12 mb-5">
+                        <div class="d-flex justify-content-center">
+                            <h2 class="font-weight-bold">
+                                Basic Plans
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="col-xl-12 mb-5">
+                        <div class="b_plan_body">
+                            <div class="row">
+                                <?php foreach($basicPlans as $row): ?>
+                                <div class="col-sm-4">
+                                    <!-- price plans item begin -->
+                                    <div class="b-price-plan">
+                                        <div class="b-price-plan__item b-price-plan__head">
+                                            <h3><?=$row['name']?></h3>
+                                        </div>
+                                        <div class="b-price-plan__item b-price-plan__cost">
+                                            <div class="cost-title"><?=$row['price']?></div>
+                                            <div class="cost-time">Monthly</div>
+                                        </div>
+                                        <ul class="iq-list">
+                                            <li><i class="fa fa-sliders" aria-hidden="true"></i>
+                                                <span class="d-flex justify-content-between">Concurrents<span><?=$row['concurrents']?></span></span>
+                                            </li>
+                                            <li><i class="fa fa-sliders" aria-hidden="true"></i>
+                                                <span class="d-flex justify-content-between">Boot Time<span><?=$row['mbt']?>(s)</span></span>
+                                            </li>
+                                            <li><i class="fa fa-sliders" aria-hidden="true"></i>
+                                                <span class="d-flex justify-content-between">Premium<span><?=$row['premium'] == 1 ? '<i class="ri-add-circle-fill" style="color: #389738;"></i>' : '<i class="ri-close-circle-fill" style="color: #ca5454;"></i>'?></span></span>
+                                            </li>
+                                            <li><i class="fa fa-sliders" aria-hidden="true"></i>
+                                                <span class="d-flex justify-content-between">API<span><?=$row['api'] == 1 ? '<i class="ri-add-circle-fill" style="color: #389738;"></i>' : '<i class="ri-close-circle-fill" style="color: #ca5454;"></i>'?></span></span>
+                                            </li>
+                                        </ul>
+                                        <div class="b-price-plan__item price_foot">
+                                            <a href="/purchase"  class="btn btn-primary dark-icon price_btn">
+                                                <span>Buy now</span> <i class="fa fa-caret-right" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </section>
+                            <section class="section" id="premium" style="padding-top: 10px;">
+                                <div class="col-xl-12 mb-5">
+                                    <div class="d-flex justify-content-center">
+                                        <h2 class="font-weight-bold">
+                                            Premium Plans
+                                        </h2>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 mb-5">
+                                    <div class="b_plan_body">
+                                        <div class="row">
+                                            <?php foreach($premiumPlans as $row): ?>
+                                            <div class="col-sm-4">
+                                                <!-- price plans item begin -->
+                                                <div class="b-price-plan">
+                                                    <div class="b-price-plan__item b-price-plan__head">
+                                                        <h3><?=$row['name']?></h3>
+                                                    </div>
+                                                    <div class="b-price-plan__item b-price-plan__cost">
+                                                        <div class="cost-title"><?=$row['price']?></div>
+                                                        <div class="cost-time">Monthly</div>
+                                                    </div>
+                                                    <ul class="iq-list">
+                                                        <li><i class="fa fa-sliders" aria-hidden="true"></i>
+                                                            <span class="d-flex justify-content-between">Concurrents<span><?=$row['concurrents']?></span></span>
+                                                        </li>
+                                                        <li><i class="fa fa-sliders" aria-hidden="true"></i>
+                                                            <span class="d-flex justify-content-between">Boot Time<span><?=$row['mbt']?>(s)</span></span>
+                                                        </li>
+                                                        <li><i class="fa fa-sliders" aria-hidden="true"></i>
+                                                            <span class="d-flex justify-content-between">Premium<span><?=$row['premium'] == 1 ? '<i class="ri-add-circle-fill" style="color: #389738;"></i>' : '<i class="ri-close-circle-fill" style="color: #ca5454;"></i>'?></span></span>
+                                                        </li>
+                                                        <li><i class="fa fa-sliders" aria-hidden="true"></i>
+                                                            <span class="d-flex justify-content-between">API<span><?=$row['api'] == 1 ? '<i class="ri-add-circle-fill" style="color: #389738;"></i>' : '<i class="ri-close-circle-fill" style="color: #ca5454;"></i>'?></span></span>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="b-price-plan__item price_foot">
+                                                        <a href="/purchase"  class="btn btn-primary dark-icon price_btn">
+                                                            <span>Buy now</span> <i class="fa fa-caret-right" aria-hidden="true"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="section row h-auto" id="faq" style="padding-top: 150px;">
+                                <div class="col-xl-12 mb-2">
+                                    <div class="d-flex justify-content-center">
+                                        <h2 class="font-weight-bold">
+                                            FAQ
+                                        </h2>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 mb-0">
+                                    <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                                        <div class="iq-card-body">
+                                            <div class="iq-advance-course d-flex align-items-center justify-content-between">
+                                                <div class="left-block">
+                                                    <div class="d-flex justify-content-center">
+                                                        <div class="rounded-circle iq-card-icon iq-bg-primary"><i class="ri-questionnaire-fill"></i></div>
+                                                        <div class="ml-3">
+                                                            <h4 class="">What is neostresser.ws and how to use?</h4>
+                                                            <p class="mb-0">neostresser.ws is a utility with which you can check your website or your company's server for vulnerabilities.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="right-block position-relativ">
+                                                    <img src="assets/images/page-img/34.png" class="img-fluid image-absulute image-absulute-1" alt="icon-img">
+                                                    <img src="assets/images/page-img/35.png" class="img-fluid image-absulute image-absulute-2" alt="icon-img">
+                                                </div>
+                                            </div>
+                   
