@@ -1,0 +1,177 @@
+<?php
+$page = 'Attack Hub';
+define('allow', TRUE);
+include_once('main/public/header.php');
+
+$allMethods = $Methods->MethodsDataAll();
+$userData = $User->UserData();
+?>
+<style type="text/css">
+</style>
+<div id="content-page" class="content-page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-4">
+                <div class="iq-card">
+                    <div class="card-header flex justify-content-between">
+                        <span>Attack Manager</span>
+                    </div>
+                    <div class="iq-card-body">
+                        <div class="d-flex justify-content-center mb-1">
+                            <ul class="nav nav-pills mb-3 nav-fill" id="pills-tab-1" role="tablist">
+                                <li class="nav-item mr-3 disablevs">
+                                    <a class="nav-link active" id="pills-home-tab-fill" data-toggle="pill" href="#layer4hub" role="tab" aria-controls="pills-home" aria-selected="false" style="border-radius: 2px; padding: 5px 10px;">Layer 4</a>
+                                </li>
+                                <li class="nav-item mr-3">
+                                    <a class="nav-link" id="pills-profile-tab-fill" data-toggle="pill" href="#layer7hub" role="tab" aria-controls="pills-profile" aria-selected="true" style="border-radius: 2px; padding: 5px 10px;">Layer 7</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content" id="pills-tabContent-1">
+                            <div class="tab-pane fade show active" id="layer4hub" role="tabpanel" aria-labelledby="pills-home-tab-fill">
+                                <form method="POST" id="layer4">
+                                    <div class="form-row">
+                                        <div class="form-group col-xl-8">
+                                            <label for="target">Target</label>
+                                            <input type="text" class="form-control form-control-sm" name="address" placeholder="127.0.0.1">
+                                        </div>
+                                        <div class="form-group col-xl-4">
+                                            <label for="target">Port</label>
+                                            <input type="text" class="form-control form-control-sm" name="port" placeholder="1-65535">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mbt"> Boot time</label>
+                                        <input type="text" class="form-control form-control-sm" name="time" placeholder="Min: 30 Max: <?php echo $User->getUserPlan($userData['id'])['mbt']?>">
+                                    </div>
+                                    <div id="collapseExample" class="collapse">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="method">Attack Method</label>
+                                        <div class="dropdown">
+                                            <div class="select">
+                                                <span>Select Method</span>
+                                                <i class="fa fa-chevron-left"></i>
+                                            </div>
+                                            <input type="hidden" name="method">
+                                            <ul class="dropdown-menu" name="method">
+                                                <li class="dropdown-item-label">AMP</li>
+                                                <?php foreach ($allMethods['Response'] as $Mk => $Mv):
+                                                    if ($Mv['layer'] == 4 && $Mv['type'] == 1): ?>
+                                                        <li class="dropdown-item" id="<?= $Mv['id'] ?>"><i class="ri-bug-line mr-1"></i><b><?= $Mv['premium'] == 1 ? '[PREMIUM]' : '' ?> <?= $Secure->SecureTxt($Mv['name']) ?></b> <div style="width: 3px;"></div> - <?= $Secure->SecureTxt($Mv['description']) ?></li>
+                                                    <?php endif;
+                                                endforeach; ?>
+                                                <li class="dropdown-item-label">TCP</li>
+                                                <?php foreach ($allMethods['Response'] as $Mk => $Mv):
+                                                    if ($Mv['layer'] == 4 && $Mv['type'] == 2): ?>
+                                                        <li class="dropdown-item" id="<?= $Mv['id'] ?>"><i class="ri-bug-line mr-1"></i><b><?= $Mv['premium'] == 1 ? '[PREMIUM]' : '' ?> <?= $Secure->SecureTxt($Mv['name']) ?></b> <div style="width: 3px;"></div> - <?= $Secure->SecureTxt($Mv['description']) ?></li>
+                                                    <?php endif;
+                                                endforeach; ?>
+                                                <li class="dropdown-item-label">UDP</li>
+                                                <?php foreach ($allMethods['Response'] as $Mk => $Mv):
+                                                    if ($Mv['layer'] == 4 && $Mv['type'] == 3): ?>
+                                                        <li class="dropdown-item" id="<?= $Mv['id'] ?>"><i class="ri-bug-line mr-1"></i><b><?= $Mv['premium'] == 1 ? '[PREMIUM]' : '' ?> <?= $Secure->SecureTxt($Mv['name']) ?></b> <div style="width: 3px;"></div> - <?= $Secure->SecureTxt($Mv['description']) ?></li>
+                                                    <?php endif;
+                                                endforeach; ?>
+                                                <li class="dropdown-item-label">GAME</li>
+                                                <?php foreach ($allMethods['Response'] as $Mk => $Mv):
+                                                    if ($Mv['layer'] == 4 && $Mv['type'] == 6): ?>
+                                                        <li class="dropdown-item" id="<?= $Mv['id'] ?>"><i class="ri-bug-line mr-1"></i><b><?= $Mv['premium'] == 1 ? '[PREMIUM]' : '' ?> <?= $Secure->SecureTxt($Mv['name']) ?></b> <div style="width: 3px;"></div> - <?= $Secure->SecureTxt($Mv['description']) ?></li>
+                                                    <?php endif;
+                                                endforeach; ?>
+                                                <li class="dropdown-item-label">SPECIAL</li>
+                                                <?php foreach ($allMethods['Response'] as $Mk => $Mv):
+                                                    if ($Mv['layer'] == 4 && $Mv['type'] == 4): ?>
+                                                        <li class="dropdown-item" id="<?= $Mv['id'] ?>"><i class="ri-bug-line mr-1"></i><b><?= $Mv['premium'] == 1 ? '[PREMIUM]' : '' ?> <?= $Secure->SecureTxt($Mv['name']) ?></b> <div style="width: 3px;"></div> - <?= $Secure->SecureTxt($Mv['description']) ?></li>
+                                                    <?php endif;
+                                                endforeach; ?>
+                                                 <li class="dropdown-item-label">BOTNET</li>
+                                                <?php foreach ($allMethods['Response'] as $Mk => $Mv):
+                                                    if ($Mv['layer'] == 4 && $Mv['type'] == 5): ?>
+                                                        <li class="dropdown-item" id="<?= $Mv['id'] ?>"><i class="ri-bug-line mr-1"></i><b><?= $Mv['premium'] == 1 ? '[PREMIUM]' : '' ?> <?= $Secure->SecureTxt($Mv['name']) ?></b> <div style="width: 3px;"></div> - <?= $Secure->SecureTxt($Mv['description']) ?></li>
+                                                    <?php endif;
+                                                endforeach; ?>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="slots">Concurrents</label>
+                                        <input type="number" class="form-control form-control-sm" min="1" max="<?php echo $User->getUserPlan($userData['id'])['concurrents'] ?>" id="slots" name="slots" value="1" placeholder="Min: 1" oninput="this.form.customRange1.value=this.value">
+                                        <input type="range" class="custom-range" id="customRange1" value="1" min="1" max="<?php echo $User->getUserPlan($userData['id'])['concurrents'] ?>"   oninput="this.form.slots.value=this.value">
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="button" class="btn btn-sm btn-primary dark-icon col-xl-10 mb-2">Launch</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="layer7hub" role="tabpanel" aria-labelledby="pills-profile-tab-fill">
+                                <form method="POST" id="layer7">
+                                    <input type="hidden" id="_csrf" name="_csrf" value="<?php echo $csrftoken; ?>">
+                                    <div class="form-group">
+                                        <label for="target">Target</label>
+                                        <input type="text" class="form-control form-control-sm"  id="address" name="address" placeholder="https://example.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mbt"> Boot time</label>
+                                        <input type="text" class="form-control form-control-sm"  id="time"  name="time" placeholder="min: 30 max: <?php echo $User->getUserPlan($User->UserData()['id'])['mbt'] ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="method">Attack Method</label>
+                                        <div class="dropdown">
+                                            <div class="select">
+                                                <span>Select Method</span>
+                                                <i class="fa fa-chevron-left"></i>
+                                            </div>
+                                            <input type="hidden" name="method">
+                                            <ul class="dropdown-menu" name="method">
+                                                <li class="dropdown-item-label">Basic</li>
+                                                <?php foreach ($allMethods['Response'] as $Mk => $Mv): ?>
+                                                    <?php if ($Mv['layer'] == 7 && $Mv['type'] == 1): ?>
+                                                        <li class="dropdown-item" id="<?= $Mv['id'] ?>"><i class="ri-bug-line mr-1"></i><b><?= $Secure->SecureTxt($Mv['name']) ?></b> <div style="width: 3px;"></div> - <?= $Secure->SecureTxt($Mv['description']) ?></li>
+                                                    <?php endif; ?>
+                                                <?php endforeach; ?>
+
+                                                <li class="dropdown-item-label">Premium</li>
+
+                                                <?php foreach ($allMethods['Response'] as $Mk => $Mv): ?>
+                                                    <?php if ($Mv['layer'] == 7 && $Mv['type'] == 2): ?>
+                                                        <li class="dropdown-item" id="<?= $Mv['id'] ?>"><i class="ri-bug-line mr-1"></i><b><?= $Secure->SecureTxt($Mv['name']) ?></b> <div style="width: 3px;"></div> - <?= $Secure->SecureTxt($Mv['description']) ?></li>
+                                                    <?php endif; ?>
+                                                <?php endforeach; ?>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="slots">Concurrents</label>
+                                        <input type="text" class="form-control form-control-sm" id="slots" name="slots" value="1" placeholder="Min: 1"   oninput="this.id.slotsRange.value=this.value">
+                                        <input type="range" class="custom-range" id="customRange1" value="1" min="1" max="<?php echo $Plan->PlanDataID($User->UserData()['plan'])['concurrents'] ?>"   oninput="this.form.slots.value=this.value">
+                                    </div>
+                                    <div class="text-center">
+                                        <button id="blockvsl7" type="button" class="btn btn-sm btn-primary dark-icon col-xl-10 mb-2">Launch</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8">
+                <div class="iq-card">
+                    <div class="card-header flex justify-content-between">
+                        <span>Running Attacks</span>
+                        <form method="POST" id="Details7">
+                            <button type="button" id="blockvsstop" onclick="StopAll" class="btn btn-sm btn-danger"><i class="fa fa-ban pr-0" aria-hidden="true"></i> STOP ALL</button>
+                        </form>
+                    </div>
+                    <div class="iq-card-body">
+                        <div id="attacklist"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+include_once('main/public/footer.php');
+?>
