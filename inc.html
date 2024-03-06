@@ -1,0 +1,141 @@
+<?php
+if (!defined('allow')) {
+   header("HTTP/1.0 404 Not Found");
+}
+
+define('test', TRUE);
+
+$errors = 0;
+
+if ($errors == 1) {
+   error_reporting(E_ALL);
+   error_reporting(1);
+   ini_set('display_errors', 1);
+   ini_set('display_startup_errors', 1);
+} else {
+   ini_set('display_errors', 0);
+   ini_set('display_startup_errors', 0);
+}
+
+ini_set('error_log', 'error_logs');
+error_reporting(E_ALL | E_STRICT | E_NOTICE);
+
+if (session_status() == PHP_SESSION_NONE) {
+   session_start();
+}
+
+if (empty($_SESSION['token'])) {
+   $_SESSION['token'] = bin2hex(random_bytes(32));
+}
+
+$csrftoken = $_SESSION['token'];
+
+ob_start();
+
+date_default_timezone_set('Europe/Warsaw');
+
+$POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+$GET = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
+
+$assets = '/';
+$sitelink = 'neostresser.ws';
+
+//Set href link path
+if (defined('adminlink')) {
+   $link = '../';
+} else {
+   $link = './';
+}
+
+//Set root path
+
+if (defined('admin')) {
+   $path = '../';
+} else if (defined('api')) {
+   $path = '../';
+
+} else if (defined('news')) {
+   $path = '../';
+
+} else if (defined('pages')) {
+   $path = '../../';
+
+} else {
+   $path = './';
+
+}
+
+// Configuration Files
+include_once($path . 'main/database/dbinfo.php');           // MySQL Config File
+
+// Classes
+include_once($path . 'main/class/user.class.php');        // User Managment Class
+include_once($path . 'main/class/secure.class.php');        // Secure Managment Class
+include_once($path . 'main/class/alert.class.php');       // Alert Managment Class
+include_once($path . 'main/class/plan.class.php');        // Plan FOR TEST Managment Class
+include_once($path . 'main/class/news.class.php');      // News Managment Class
+include_once($path . 'main/class/logs.class.php');      // Action logs Managment Class
+include_once($path . 'main/class/alogs.class.php');      // Info logs Managment Class
+include_once($path . 'main/class/order.class.php');      // Info logs Managment Class
+include_once($path . 'main/class/data.class.php');      // Data Managment Class
+include_once($path . 'main/class/api.class.php');      // Data Managment Class
+include_once($path . 'main/class/support.class.php'); // Support Managment
+include_once($path . 'main/class/main.class.php'); // Main Managment
+
+include_once($path . 'main/class/admin.class.php'); // Admin Managment
+
+include_once($path . 'main/class/methods.class.php');    // Methods Managment Class
+include_once($path . 'main/class/blacklist.class.php');    // BlackList Managment Class
+
+include_once($path . 'main/class/powerproofs.class.php');    // Power Proofs Managment Class
+include_once($path . 'main/class/discord.class.php');    // Discord Logs Managment Class
+
+include_once($path . 'main/class/db.class.php');      // MySQL Managment Class
+
+
+require($path . 'vendor/autoload.php');
+
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+
+$Client = new Client();
+
+$User = new User();
+$Admin = new Admin();
+$Secure = new Secure();
+$Alert = new Alert();
+$Plan = new Plan();
+$News = new News();
+$Logs = new Logs();
+$ALogs = new ALogs();
+$Order = new Order();
+$Data = new Data();
+$Api = new Api();
+$Methods = new Methods();
+$BlackList = new BlackList();
+$Support = new Support();
+$Main = new Main();
+
+$Discord = new Discord();
+$PowerProofs = new PowerProofs();
+
+#Database initiator
+$DataBase = new Database();
+
+if ($User->IsLoged() == true) {
+   if ($User->UserData()['status'] != false) {
+      header("Location: ../denied");
+      die();
+   }
+}
+
+if (defined('admin')) {
+} else {
+   if ($Main->Maintaince()['maintenance'] != false) {
+      header("location: ../maintenance");
+      die();
+   }
+}
+
+?>
