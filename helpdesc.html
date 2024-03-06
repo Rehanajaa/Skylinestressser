@@ -1,0 +1,106 @@
+<?php
+$page = 'Home';
+define('allow', TRUE);
+include_once('main/public/header.php');
+?>
+<style>
+	.bg-rounded {
+		border-radius: 15px 15px 0 0;
+	}
+	#methods tbody td {
+		opacity: 0.9;
+	}
+
+	table.dataTable2 {
+		width: 100%;
+		margin: 0 auto;
+		clear: both;
+		border-collapse: separate;
+		border-spacing: 0;
+	}
+
+	table.dataTable2 tbody th, table.dataTable2 tbody td {
+    	padding: 8px 10px;
+	}
+</style>
+
+<div id="content-page" class="content-page">
+	<div class="container-fluid">
+		<div class="row"> 
+			<div class="col-sm-12">
+				<div class="iq-card">
+					<div class="iq-card-body">
+						<div class="table-responsive">
+							<table id="methods" class="dataTable2">
+								<tbody>
+									<tr class="">
+										<th class="font-weight-semibold dark-icon uppercase bg-rounded" colspan="4">Category: AMP</th>
+									</tr>
+									<?php foreach ($Methods->MethodsDataAll()['Response'] as $Mk => $Mv) { if($Mv['layer'] == 4) { if($Mv['type'] == 1) { ?>
+										<tr>
+											<td><?php echo $Secure->SecureTxt($Mv['name']); ?></td>
+											<td><?php echo $Mv['description']; ?></td>
+										</tr>
+									<?php } } } ?>
+									<tr style="height: 15px;"></tr>
+									<tr class="">
+										<th class="font-weight-semibold dark-icon uppercase bg-rounded" colspan="4">Category: TCP</th>
+									</tr>
+									<?php foreach ($Methods->MethodsDataAll()['Response'] as $Mk => $Mv) { if($Mv['layer'] == 4) { if($Mv['type'] == 2) { ?>
+										<tr>
+											<td><?php echo $Secure->SecureTxt($Mv['name']); ?></td>
+											<td><?php echo $Mv['description']; ?></td>
+										</tr>
+									<?php } } } ?>
+									<tr style="height: 15px;"></tr>
+									<tr class="">
+										<th class="font-weight-semibold dark-icon uppercase bg-rounded" colspan="4">Category: UDP</th>
+									</tr>
+									<?php foreach ($Methods->MethodsDataAll()['Response'] as $Mk => $Mv) { if($Mv['layer'] == 4) { if($Mv['type'] == 3) { ?>
+										<tr>
+											<td><?php echo $Secure->SecureTxt($Mv['name']); ?></td>
+											<td><?php echo $Mv['description']; ?></td>
+										</tr>
+									<?php } } } ?>
+									<tr style="height: 15px;"></tr>
+									<tr class="">
+										<th class="font-weight-semibold dark-icon uppercase bg-rounded" colspan="4">Category: Special</th>
+									</tr>
+									<?php foreach ($Methods->MethodsDataAll()['Response'] as $Mk => $Mv) { if($Mv['layer'] == 4) { if($Mv['type'] == 4) { ?>
+										<tr>
+											<td><?php echo $Secure->SecureTxt($Mv['name']); ?></td>
+											<td><?php echo $Mv['description']; ?></td>
+										</tr>
+									<?php } } } ?>
+									<tr style="height: 15px;"></tr>
+									<tr class="">
+										<th class="font-weight-semibold dark-icon uppercase bg-rounded" colspan="4">Category: Layer 7</th>
+									</tr>
+									<?php foreach ($Methods->MethodsDataAll()['Response'] as $Mk => $Mv) { if($Mv['layer'] == 7) { ?>
+										<tr>
+											<td><?php echo $Secure->SecureTxt($Mv['name']); ?></td>
+											<td><?php echo $Mv['description']; ?></td>
+										</tr>
+									<?php } } ?>
+									<tr style="height: 15px;"></tr>
+									<tr class="">
+										<th class="font-weight-semibold dark-icon uppercase bg-rounded" colspan="4">Category: BOTNET</th>
+									</tr>
+									<?php foreach ($Methods->MethodsDataAll()['Response'] as $Mk => $Mv) { if($Mv['layer'] == 4) { if($Mv['type'] == 5) { ?>
+										<tr>
+											<td><?php echo $Secure->SecureTxt($Mv['name']); ?></td>
+											<td><?php echo $Mv['description']; ?></td>
+										</tr>
+									<?php } } } ?>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+include_once('main/public/footer.php');
+?>
