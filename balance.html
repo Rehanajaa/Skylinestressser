@@ -1,0 +1,118 @@
+<?php
+    $page = 'Add balance';
+    define('allow', TRUE);
+    include_once 'main/public/header.php';
+
+    $userData = $User->UserData();
+    $_addons = $User->getAddonsRaw($userData['id']);
+    $addons = [];
+
+    foreach($_addons as $addon) {
+        if(intval($addon['expire']) > time()) {
+            array_push($addons, $addon);
+        }
+    }
+
+    $addonsTranslations = array(
+        '+200s',
+        '+1 conc',
+        'Premium',
+        'API'
+    );
+
+    $currentPlan = $Plan->PlanDataID($userData['plan']);
+?>
+
+<script>
+function _CreateInvoice() {
+    let formData = new FormData(document.querySelector('#CreateInvoiceV2'));
+    let _csrf = $('input[id="_csrf"]').attr('value');
+    formData.append('_csrf', _csrf);
+    $.ajax({
+        url: 'process?CreateInvoice',
+        type: 'POST',
+        contentType: false,
+        cache: false,
+        processData: false,
+        data: formData,
+        success: function(r) {
+            var res = JSON.parse(r);
+            showAlert(res[1], res[0]);
+            if (res[0] == 'success') {
+                setTimeout(function() {
+                    window.location.replace(res[2]);
+                }, 2000);
+            }
+            return false;
+        },
+        error: function(err) {
+            return false;
+        }
+    });
+}
+</script>
+
+<style>
+    .b_plan_body b{
+        font-weight: 1000;
+    }
+</style>
+
+<div id="content-page" class="content-page">
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb iq-bg-primary d-flex justify-content-between">
+                <li class="btn btn-sm btn-primary dark-icon" aria-current="page"><?php echo "$page" ?></li>
+            </ol>
+        </nav>
+        <div class="b_plan_body iq-card-block iq-card-stretch iq-card-height" id="refresh">
+            <div class="col-xl-4">
+                <div class="iq-card">
+                    <div class="card-header">
+                        Informations
+                    </div>
+                    <div class="iq-card-body" style="font-weight: 500;">
+                        <b>Current plan price:</b> $<?=empty($currentPlan) ? "n/a" : $currentPlan['price']?><br>
+                        <b>Expiration date:</b> <?php if($userData['expire'] > time()) { echo date('d.m.Y h:m:s', $userData['expire']); } else if($userData['expire'] == 1) { echo 'Expired'; } else { echo 'n/a'; } ?><br>
+                        <b>Balance:</b> $<?=(int) $userData['money']?>
+                        <?php if(count($addons) > 0): ?>
+                            <hr>
+                            <span style="font-weight: 1000;">Active addons:</span><br>
+                            <?php foreach($addons as $addon): ?>
+                                • <?=$addonsTranslations[$addon['type']]?> (expires: <?=date("Y-m-d H:i:s", $addon['expire']);?>)<br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="iq-card">
+                    <div class="card-header">
+                        Deposit funds
+                    </div>
+                    <div class="iq-card-body">
+                        <form id="CreateInvoiceV2" method="POST">
+                            <div class="form-row">
+                                <input type="hidden" id="_csrf" name="_csrf" value="<?php echo $csrftoken; ?>">
+                                <div class="col-md-12">
+                                    <label for="link">Amount ($)</label>
+                                    <input type="number" class="form-control" name="amount" placeholder="10">
+                                </div>
+                                <div class="col-md-12 mt-2">
+                                    <label for="link">Discount code</label>
+                                    <input type="text" class="form-control" name="discountCode" placeholder="optional..">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center" style="margin-top: 10px;">
+                                <button onclick="_CreateInvoice()" type="button" class="btn btn-primary dark-icon">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+include_once('main/public/footer.php');
+?>
