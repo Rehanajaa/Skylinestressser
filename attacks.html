@@ -1,0 +1,75 @@
+<?php
+define('allow', TRUE);
+include_once 'inc.php';
+?> 
+<script>
+    function getTime(dateval, time){
+        var downloadTimer = setInterval(function(){
+            if(time <= 0){
+                clearInterval(downloadTimer);
+                $("#countdown-" + dateval).html("Completed");
+            } else {
+               $("#countdown-" + dateval).html(new Date(time * 1000).toISOString().substr(11, 8));
+           }
+           time -= 1;
+       }, 1000);
+    }
+</script>
+<div class="table-responsive">
+    <table id="example1" class="dataTable">
+        <thead>
+            <tr>
+                <th class="small">Target</th>
+                <th class="small">Expire</th>
+                <th class="small">Method</th>
+                <th class="small">Handler</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($ALogs->LogsDataUserID($User->UserData()['id'], 0)['Response'] as $Sk => $Sv): ?>
+                <?php if ($Sv['time'] + $Sv['date'] > time() && $Sv['stopped'] == 0): ?>
+                    <?php if ($Sv['port'] == 0) {
+                        $target = $Sv['target'];
+                    } else {
+                        $target = $Sv['target'] . ":" . $Sv['port'];
+                    }
+                    $Timer = $Sv['date'] + $Sv['time'] - time();
+                    ?>
+                    <tr id="<?= (int)$Sv['id'] ?>">
+                        <td><?= htmlspecialchars($Secure->LimitText($target, 30)) ?></td>
+                        <td>
+                            <script type="text/javascript">
+                                getTime(<?= htmlspecialchars($Secure->SecureTxt($Sv['id'])) ?>, <?= htmlspecialchars($Secure->SecureTxt($Timer)) ?>);
+                            </script>
+                            <span class="badge badge-pill badge-primary dark-icon" id="countdown-<?= (int)$Sv['id'] ?>">Loading</span>
+                        </td>
+                        <td><span class="badge badge-pill badge-primary dark-icon"><?= htmlspecialchars($Secure->SecureTxt(@$Methods->MethodsDataID($Sv['method'])['name'])) ?></span></td>
+                        <td><span class="badge badge-pill badge-primary dark-icon"><?= htmlspecialchars($Secure->SecureTxt($Api->ApiDataID($Sv['handler'], 1)['name'])) ?></span></td>
+                        <td>
+                            <form method="POST" id="Stop<?= (int)$Sv['id'] ?>">
+                                <input type="hidden" id="_csrf" name="_csrf" value="<?= htmlspecialchars($csrftoken) ?>">
+                                <input type="hidden" id="id" name="id" value="<?= (int)$Sv['id'] ?>">
+                            </form>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<script>
+    $("#example1").DataTable({
+        searching: false,
+        paging:true,
+        select: false,
+        info: true,         
+        lengthChange:false,
+        language: {
+            paginate: {
+              next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+              previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+          }
+      }
+
+  });
+</script>
