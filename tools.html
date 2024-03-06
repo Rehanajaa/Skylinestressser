@@ -1,0 +1,265 @@
+<?php
+    $page = 'Tools';
+    define('allow', TRUE);
+    include_once 'main/public/header.php';
+?>
+
+<script>
+    function ValidateIPaddress(ipaddress) {  
+        if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress)) {  
+            return (true)  
+        } 
+        return (false)  
+    }  
+
+    let requestBlock = false;
+
+    function __searchHandler(type) {
+        if(requestBlock) return;
+
+        switch(type) {
+            case 1: //minecraft resolver
+                const ipAddress = $("input[name=mcAddress]").val()
+                requestBlock = true;
+
+                $.post("/process?mcLookup", {mcAddress: ipAddress}, (response) => {
+                    requestBlock = false;
+                    response = JSON.parse(response)
+
+                    if(response.error) {
+                        toastr.error(response.error)
+                    } else {
+                        let description = response.serverData.description;
+                        let serverIP = response.serverData.ip;
+
+                        let onlinePlayers = response.serverData.players.online;
+                        let maxPlayers = response.serverData.players.max;
+
+                        let version = response.serverData.version.name;
+
+                        $(".mcResults span").html(`
+                            <div class="table-responsive">
+                                <table class="table mb-0" style="color: white; margin-top: 5px;">
+                                    <tbody>
+                                        <tr>
+                                            <td class="py-2 px-0"><span class="font-weight-semibold w-50"><b>Description</b></span></td>
+                                            <td class="py-2 px-0">${description}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 px-0"><span class="font-weight-semibold w-50"><b>Server IP</b></span></td>
+                                            <td class="py-2 px-0">${serverIP.replace(":25565", "")}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 px-0"><span class="font-weight-semibold w-50"><b>Players</b></span></td>
+                                            <td class="py-2 px-0">${onlinePlayers} / ${maxPlayers}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 px-0"><span class="font-weight-semibold w-50"><b>Version</b></span></td>
+                                            <td class="py-2 px-0">${version}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        `)
+
+                        $(".mcResults").show();
+                    }
+                })
+                break;
+            case 2: //cfx resolver
+                const cfxLink = $("input[name=cfxLink]").val()
+                const regex = new RegExp('(?:http://|https://)?(?:www\\.)?cfx\\.re/join/[a-z0-9:]{6}$', 'gm')
+      
+                if(!cfxLink.match(regex)) {
+                    toastr.error("Invalid link provided!")
+                    return
+                }
+
+                requestBlock = true;
+
+                $.post("/process?cfxLookup", {cfxLink}, (response) => {
+                    requestBlock = false;
+                    response = JSON.parse(response)
+
+                    if(response.error) {
+                        toastr.error(response.error)
+                    } else {
+                        let serverName = response.serverData[0]
+                        let serverIP = response.serverData[1]
+                        let onlinePlayers = response.serverData[2]
+                        let maxPlayers = response.serverData[3]
+                        let artifacts = response.serverData[4]
+                        let resourcesAmount = response.serverData[5]
+
+                        $(".cfxResults span").html(`
+                            <div class="table-responsive">
+                                <table class="table mb-0" style="color: white; margin-top: 5px;">
+                                    <tbody>
+                                        <tr>
+                                            <td class="py-2 px-0"><span class="font-weight-semibold w-50"><b>Server name</b></span></td>
+                                            <td class="py-2 px-0">${serverName}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 px-0"><span class="font-weight-semibold w-50"><b>Server IP</b></span></td>
+                                            <td class="py-2 px-0">${serverIP.replace("http://", "").replace("/", "")}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 px-0"><span class="font-weight-semibold w-50"><b>Players</b></span></td>
+                                            <td class="py-2 px-0">${onlinePlayers} / ${maxPlayers}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 px-0"><span class="font-weight-semibold w-50"><b>Resources amount</b></span></td>
+                                            <td class="py-2 px-0">${resourcesAmount}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        `)
+
+                        $(".cfxResults").show();
+                    }
+                })
+                break;
+            case 3: //geo resolver
+                const geoIP = $("input[name=geoIP]").val()
+
+                if(!ValidateIPaddress(geoIP)) {
+                    toastr.error("Invalid IP provided!")
+                    return
+                }
+                
+                requestBlock = true;
+
+                $.post("/process?geoLookup", {geoIP}, (response) => {
+                    requestBlock = false;
+                    response = JSON.parse(response)
+
+                    if(response.error) {
+                        toastr.error(response.error)
+                    } else {
+                        $(".geoResults span").html(`
+                            <div class="table-responsive">
+                                <table class="table mb-0" style="color: white; margin-top: 5px;">
+                                    <tbody>
+                                        <tr>
+                                            <td class="py-2 px-0"><span class="font-weight-semibold w-50"><b>ASN</b></span></td>
+                                            <td class="py-2 px-0">${response.as} ${(response.isp).length > 1 ? "("+response.isp+")" : ""}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 px-0"><span class="font-weight-semibold w-50"><b>Country</b></span></td>
+                                            <td class="py-2 px-0"><img style="max-width: 32px;" src="https://raw.githubusercontent.com/hampusborgos/country-flags/main/png100px/${(response.country).toLowerCase()}.png"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2 px-0"><span class="font-weight-semibold w-50"><b>Subnet</b></span></td>
+                                            <td class="py-2 px-0">${response.subnet}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        `)
+
+                        $(".geoResults").show();
+                    }
+                })
+                break;
+            default:
+                break;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", (event) => {
+        console.log("[neostresser] loaded")
+        $("#mcSearch_submit").on('click', function() { __searchHandler(1) })
+        $("#cfxSearch_submit").on('click', function() { __searchHandler(2) })
+        $("#geoSearch_submit").on('click', function() { __searchHandler(3) })
+    });
+</script>
+
+<style>
+    .b_plan_body b{
+        font-weight: 1000;
+    }
+</style>
+
+<div id="content-page" class="content-page">
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb iq-bg-primary d-flex justify-content-between">
+                <li class="btn btn-sm btn-primary dark-icon" aria-current="page"><?php echo "$page" ?></li>
+            </ol>
+        </nav>
+        <div class="b_plan_body iq-card-block iq-card-stretch iq-card-height" id="refresh">
+            <div class="row">
+                <div class="col-xl-4">
+                    <div class="iq-card">
+                        <div class="card-header">
+                            Minecraft resolver
+                        </div>
+                        <div class="iq-card-body" style="font-weight: 500;">
+                            <div class="form-group">
+                                <label for="mcAddress">IP</label>
+                                <input type="text" class="form-control form-control-sm" name="mcAddress" placeholder="hypixel.net">
+                            </div>
+                            <div class="mcResults" style="display: none;">
+                                <span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="flex justify-content-center">
+                                <button type="button" class="btn btn-sm btn-primary dark-icon" id="mcSearch_submit">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="iq-card">
+                        <div class="card-header">
+                            CFX Resolver
+                        </div>
+                        <div class="iq-card-body" style="font-weight: 500;">
+                            <div class="form-group">
+                                <label for="cfxLink">Link</label>
+                                <input type="text" class="form-control form-control-sm" name="cfxLink" placeholder="cfx.re/join/xxxxx">
+                            </div>
+                            <div class="cfxResults" style="display: none;">
+                                <span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="flex justify-content-center">
+                                <button type="button" class="btn btn-sm btn-primary dark-icon" id="cfxSearch_submit">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="iq-card">
+                        <div class="card-header">
+                            GEO IP
+                        </div>
+                        <div class="iq-card-body" style="font-weight: 500;">
+                            <div class="form-group">
+                                <label for="geoIP">IP</label>
+                                <input type="text" class="form-control form-control-sm" name="geoIP" placeholder="1.1.1.1">
+                            </div>
+                        </div>
+                        <div class="geoResults" style="display: none;">
+                            <span>
+                            </span>
+                        </div>
+                        <div class="card-footer">
+                            <div class="flex justify-content-center">
+                                <button type="button" class="btn btn-sm btn-primary dark-icon" id="geoSearch_submit">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+include_once('main/public/footer.php');
+?>
