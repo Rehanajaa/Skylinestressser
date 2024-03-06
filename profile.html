@@ -1,0 +1,132 @@
+<?php
+$page = 'Profile';
+define('allow', TRUE);
+include_once('main/public/header.php');
+
+$userPayments = $User->GetUserPayments();
+
+?>
+
+<div id="content-page" class="content-page">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xl-4">
+				<div class="iq-card iq-card-block iq-card-stretch">
+					<div class="card-header">
+						Profile
+					</div>
+					<div class="iq-card-body">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">
+								<span class="d-flex justify-content-between">Slots<span class="badge badge-pill badge-primary dark-icon mt-1"><?php $Addons = explode('|', $User->UserData()['addons']); if(!empty($Secure->SecureTxt($Plan->PlanDataID($User->UserData()['plan'])['concurrents']))) { echo $Secure->SecureTxt($Plan->PlanDataID($User->UserData()['plan'])['concurrents']) + $Addons[1]; } else { echo 'n/a'; } ?>
+							</span></span>
+						</li>
+						<li class="list-group-item">
+							<span class="flex justify-content-between">Time<span class="badge badge-pill badge-primary dark-icon mt-1"><?php $Addons = explode('|', $User->UserData()['addons']); if(!empty($Secure->SecureTxt($Plan->PlanDataID($User->UserData()['plan'])['mbt']))) { echo $Secure->SecureTxt($Plan->PlanDataID($User->UserData()['plan'])['mbt']) + $Addons[0]; } else { echo 'n/a'; } ?>(s)</span></span>
+						</li>
+						<li class="list-group-item">
+							<span class="flex justify-content-between">Balance<span class="badge badge-pill badge-primary dark-icon mt-1"><?php echo (int) $User->UserData()['money']; ?>$</span></span>
+						</li>
+						<li class="list-group-item">
+							<span class="flex justify-content-between">Premium<span class="badge badge-pill badge-primary dark-icon mt-1"><?php if($Secure->SecureTxt($Plan->PlanDataID($User->UserData()['plan'])['premium']) == false) { echo '<i class="ri-close-line"></i>'; } else { echo '<i class="ri-check-double-line"></i>'; }?></span></span>
+						</li>
+						<li class="list-group-item">
+							<span class="flex justify-content-between">API<span class="badge badge-pill badge-primary dark-icon mt-1"><?php if($Secure->SecureTxt($Plan->PlanDataID($User->UserData()['plan'])['api']) == false) { echo '<i class="ri-close-line"></i>'; } else { echo '<i class="ri-check-double-line"></i>'; }?></span></span>
+						</li>
+					</ul>
+				</div>
+				<div class="card-footer flex justify-content-between">
+					<span>Expire:</span>
+					<span class="badge badge-pill badge-primary dark-icon"><?php if($User->UserData()['expire'] > time()) { echo date('d.m.Y', $User->UserData()['expire']); } else if($User->UserData()['expire'] == 1) { echo 'Expired'; } else { echo 'n/a'; } ?></span>
+				</div>
+			</div>
+			<div class="iq-card">
+				<div class="card-header d-flex justify-content-between">
+					Account Setting
+				</div>
+				<form method="POST" id="UpdateProfile">
+					<div class="iq-card-body">
+						<input type="hidden" id="_csrf" name="_csrf" value="<?php echo $csrftoken; ?>">
+						<div class="form-group">
+							<label for="uname">User Name:</label>
+							<input type="text" class="form-control" disabled value="<?php echo $User->UserData()['username']; ?>">
+						</div>
+						<div class="form-row">
+							<div class="col-xl-12 mb-3">
+								<label for="email">Current Password:</label>
+								<input type="text" class="form-control" name="CPassword" placeholder="******">
+							</div>
+							<div class="col-xl-6 mb-3">
+								<label for="altemail">New Password:</label>
+								<input type="text" class="form-control" name="Password1" placeholder="*****">
+							</div>
+							<div class="col-xl-6 mb-3">
+								<label for="altemail">Confirm Password:</label>
+								<input type="text" class="form-control" name="Password2" placeholder="*****">
+							</div>
+						</div>
+					</div>
+					<div class="card-footer">
+						<div class="d-flex justify-content-center">
+							<button type="button" onclick="UpdateProfile()" class="btn btn-sm btn-primary dark-icon mr-1">Update</button>
+							<button type="button" class="btn btn-sm btn-danger mr-1" data-toggle="modal" data-target="#exampleModalCenter">Delete Account</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display: none;">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalCenterTitle">Delete account</h5>
+					</div>
+					<div class="modal-body text-center">
+						Are you sure that you want to delete your account?
+					</div>
+					<div class="modal-footer d-flex justify-content-center">
+						<form method="POST" id="DeleteAccount">
+							<input type="hidden" id="_csrf" name="_csrf" value="<?php echo $csrftoken; ?>">
+							<input type="hidden" id="id" name="id" value="<?php echo $User->UserData()['id']; ?>">
+							<button type="button" class="btn btn-sm btn-danger mr-1" onclick="DeleteAccount()">Delete Account</button>
+							<button type="button" class="btn btn-sm btn-secondary mr-1" data-dismiss="modal">Cancel</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-8">
+			<div class="iq-card">
+				<div class="card-header">
+					Payment History
+				</div>
+				<div class="iq-card-body">
+					<?php if ($userPayments['Count'] == 0): ?>
+						Not found any payments
+					<?php else: ?>
+						<table class="VstresserDate0 dataTable">
+                            <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+								<?php foreach($userPayments['Response'] as $payment): ?>
+									<tr>
+										<td>$<?=$payment['amount']?></td>
+										<td><?=$payment['date']?></td>
+									</tr>
+								<?php endforeach; ?>
+							</tbody>
+						</table>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<?php
+include_once('main/public/footer.php');
+?>
