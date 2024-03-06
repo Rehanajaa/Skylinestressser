@@ -1,0 +1,317 @@
+<?php
+$page = 'Purchase';
+define('allow', TRUE);
+include_once 'main/public/header.php';
+
+$iter = 0;
+?>
+
+<script>
+    function customPlanUpdate() {
+        let concs = $("#customConcs").val();
+        let time = $("#customTime").val();
+        let premium = $("#customPremium")[0].checked;
+        let api = $("#customAPI")[0].checked;
+
+        let finalPrice = 0;
+        finalPrice = finalPrice + (Number(concs) * 10);
+        finalPrice = finalPrice + (Number(time) * 10);
+
+        if (premium) {
+            finalPrice = finalPrice + 10;
+        }
+
+        if (api) {
+            finalPrice = finalPrice + 15;
+        }
+
+        $("#customConcs_val").html(concs);
+        $("#customTime_val").html(time * 300);
+        $("#customPrice").html(finalPrice);
+    }
+
+    function customPlanBuy() {
+        let concs = $("#customConcs").val();    
+        let time = $("#customTime").val();
+        let premium = ($("#customPremium")[0].checked) ? "1" : "0";
+        let api = ($("#customAPI")[0].checked) ? "1" : "0";
+        let _csrf = '<?=$csrftoken?>';
+
+        $.post("/process?Purchase", {
+            _csrf,
+            id: "custom",
+            concs,
+            time,
+            premium,
+            api
+        }, (response) => {
+            let res = JSON.parse(response);
+            showAlert(res[1], res[0]);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        customPlanUpdate();
+
+        $("#customConcs").on('input', customPlanUpdate);
+        $("#customTime").on('input', customPlanUpdate);
+        $("#customPremium").on('click', customPlanUpdate);
+        $("#customAPI").on('click', customPlanUpdate);
+    });
+</script>
+
+<style>
+    .button.r, .button.r .layer {
+        border-radius: 100px;
+    }
+
+    .button {
+        position: relative;
+        top: 50%;
+        width: 59px;
+        height: 30px;
+        margin: -15px auto 0 auto;
+        overflow: hidden;
+    }
+
+    .checkbox {
+        position: relative;
+        width: 100%!important;
+        height: 100%!important;
+        padding: 0;
+        margin: 0;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 3;
+    }
+
+    .knobs {
+        z-index: 2;
+    }
+
+    .button-cover, .knobs, .layer {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+    #button-3 .checkbox:checked ~ .layer {
+        background-color: #cfe3ca;
+    }
+
+    .layer {
+        width: 100%;
+        background-color: #ebf7fc;
+        transition: 0.3s ease all;
+        z-index: 1;
+    }
+
+    #button-3 .checkbox:checked + .knobs:before {
+        content: "";
+        left: 32px;
+        background-color: #389738;
+    }
+
+    #button-3 .knobs:before {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 22px;
+        height: 22px;
+        color: #fff;
+        font-size: 10px;
+        font-weight: bold;
+        text-align: center;
+        line-height: 1;
+        padding: 9px 4px;
+        background-color: #f44336;
+        border-radius: 50%;
+        transition: 0.3s ease all, left 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15);
+    }
+
+    .b-price-plan__cost {
+        border-radius: 16px;
+    }
+
+    .btn2:not(.btn-outline):not(.btn2-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
+        border: 0;
+        padding: calc(.75rem + 1px) calc(1.5rem + 1px);
+    }
+
+    .btn-check:active+.btn.btn-light-primary, .btn-check:checked+.btn.btn-light-primary, .btn2.btn-light-primary.active, .btn2.btn-light-primary.show, .btn2.btn-light-primary:active:not(.btn-active), .btn2.btn-light-primary:focus:not(.btn2-active), .btn2.btn-light-primary:hover:not(.btn-active), .show>.btn2.btn-light-primary {
+        color: #fff;
+        border-color: #526477;
+        background-color: #526477!important;
+    }
+
+    .btn2:not(.btn2-shadow):not(.shadow):not(.shadow-sm):not(.shadow-lg) {
+        box-shadow: none!important;
+    }
+
+    .btn2 {
+        display: inline-block;
+        font-weight: 500;
+        line-height: 1.5;
+        color: #fff;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: .75rem 1.5rem;
+        font-size: 0.8rem;
+        border-radius: .95rem;
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    .btn2.btn-light-primary {
+        color: rgba(125, 138, 164, 1);
+        border-color: #2d2e32;
+        background-color: #2d2e32;
+    }
+
+    .cst-wdth {
+        min-width: 280px;
+        max-width: 450px;
+    }
+
+    .cst-grid {
+        display: grid;
+        grid-template-columns: 25% 25% 25%;
+    }
+
+    @media screen and (max-width: 1299px) {
+        .cst-grid {
+            display: contents!important;
+            margin: 20px;
+        }
+    }
+</style>
+
+<div id="content-page" class="content-page">
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb iq-bg-primary d-flex justify-content-between">
+                <li class="btn btn-sm btn-primary dark-icon" aria-current="page"><?php echo "$page" ?></li>
+            </ol>
+        </nav>
+        <div class="b_plan_body iq-card-block iq-card-stretch iq-card-height" id="refresh">
+            <div class="alert alert-primary" role="alert">
+                If you want to purchase using PayPal message on Telegram - <a href="https://t.me/gnacioor" style="margin-left: 5px;">@gnacioor</a>
+            </div>
+            <div class="cst-grid justify-content-center">
+                <?php foreach ($Plan->PlanDataAll()['Response'] as $Kv => $Vv): ?>
+                    <?php if ($Vv['private'] == false): ?>
+                        <div class="col-4 cst-wdth">
+                            <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                                <div class="card-header">
+                                    <?php echo htmlspecialchars($Secure->SecureTxt($Vv['name'])); ?>
+                                </div>
+                                <div class="iq-card-body">
+                                    <div class="b-price-plan__item b-price-plan__cost">
+                                        <div class="cost-title"><?php echo htmlspecialchars($Secure->SecureTxt($Vv['price'])); ?></div>
+                                        <div class="cost-time">Monthly</div>
+                                    </div>
+                                    <ul class="iq-list">
+                                        <li>
+                                            <i class="fa fa-sliders" aria-hidden="true"></i>
+                                            <span class="d-flex justify-content-between">Concurrents<span><?php echo htmlspecialchars($Secure->SecureTxt($Vv['concurrents'])); ?></span></span>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-sliders" aria-hidden="true"></i>
+                                            <span class="d-flex justify-content-between">Time<span><?php echo htmlspecialchars($Secure->SecureTxt($Vv['mbt'])); ?>(s)</span></span>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-sliders" aria-hidden="true"></i>
+                                            <span class="d-flex justify-content-between">Premium<span><?php echo ($Vv['premium'] == false) ? '<i class="ri-close-circle-fill" style="color: #ca5454;"></i>' : '<i class="ri-add-circle-fill" style="color: #389738;"></i>'; ?></span></span>
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-sliders" aria-hidden="true"></i>
+                                            <span class="d-flex justify-content-between">API<span><?php echo ($Vv['api'] == false) ? '<i class="ri-close-circle-fill" style="color: #ca5454;"></i>' : '<i class="ri-add-circle-fill" style="color: #389738;"></i>'; ?></span></span>
+                                        </li>
+                                    </ul>
+                                    <div class="card-footer text-center">
+                                        <form method="POST" id="Purchase<?php echo (int) $Vv['ID']; ?>">
+                                            <input type="hidden" id="_csrf" name="_csrf" value="<?php echo htmlspecialchars($csrftoken); ?>">
+                                            <input type="hidden" id="id" name="id" value="<?php echo (int) $Vv['ID']; ?>">
+                                            <?php if ($User->UserData()['plan'] != $Vv['ID']): ?>
+                                                <button type="button" class="btn2 btn-light-primary">
+                                                    <span>Purchase</span>
+                                                </button>
+                                            <?php else: ?>
+                                                <button disabled class="btn2 btn-light-primary">
+                                                    <span>Active</span>
+                                                </button>
+                                            <?php endif; ?>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+            <div class="cst-grid justify-content-center">
+                <div class="col-4 cst-wdth justify-content-center">
+                </div>
+                <div class="col-4 cst-wdth justify-content-center">
+                    <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                        <div class="card-header">
+                            Custom plan
+                        </div>
+                        <div class="iq-card-body">
+                            <div class="b-price-plan__item b-price-plan__cost">
+                                <div class="cost-title" id="customPrice">35</div>
+                                <div class="cost-time">Monthly</div>
+                            </div>
+                            <ul class="iq-list">
+                                <li>
+                                    <i class="fa fa-sliders" aria-hidden="true"></i>
+                                    <span class="d-flex justify-content-between">Concurrents (<span style="display: contents;" id="customConcs_val">1</span>)<span><input id="customConcs" class="range-slider__range" type="range" value="1" min="1" max="30"></span></span>
+                                </li>
+                                <li>
+                                    <i class="fa fa-sliders" aria-hidden="true"></i>
+                                    <span class="d-flex justify-content-between">Time (<span style="display: contents;" id="customTime_val">200</span>s)<span><input id="customTime" class="range-slider__range" type="range" value="1" min="1" max="12"></span></span>
+                                </li>
+                                <li><i class="fa fa-sliders" aria-hidden="true"></i>
+                                    <span class="d-flex justify-content-between">Premium
+                                        <span>
+                                            <div class="button r" id="button-3">
+                                                <input type="checkbox" class="checkbox" id="customPremium">
+                                                <div class="knobs"></div>
+                                                <div class="layer"></div>
+                                            </div>
+                                        </span>
+                                    </span>
+                                </li>
+                                <li><i class="fa fa-sliders" aria-hidden="true"></i>
+                                    <span class="d-flex justify-content-between">API
+                                        <span>
+                                            <div class="button r" id="button-3">
+                                                <input type="checkbox" class="checkbox" id="customAPI">
+                                                <div class="knobs"></div>
+                                                <div class="layer"></div>
+                                            </div>
+                                        </span>
+                                    </span>
+                                </li>
+                            </ul>
+                            <div class="card-footer text-center">
+                                <button type="button" class="btn2 btn-light-primary" onclick="customPlanBuy()">
+                                    Purchase
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+include_once('main/public/footer.php');
+?>
